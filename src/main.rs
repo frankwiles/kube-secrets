@@ -30,7 +30,17 @@ fn determine_config(matches: ArgMatches) -> Config {
 
 fn display_secret(c: &Config, s: &Secret) -> bool {
     if c.show_all || s.type_.as_ref().unwrap() == "Opaque" {
-        return true;
+        // We should show the secret if we aren't querying
+        if c.query.is_empty() {
+            return true;
+        }
+
+        // Filter the name against our query
+        let secret_name = s.metadata.name.as_ref().unwrap();
+        if secret_name.contains(&c.query) {
+            return true;
+        }
+        return false;
     } else {
         return false;
     }
@@ -63,7 +73,6 @@ async fn main() -> anyhow::Result<()> {
 
     // Turn command line matches into our Config struct
     let config = determine_config(matches);
-    // println!("{:?}", config);
 
     let client = Client::try_default().await?;
     let secrets: Api<Secret> = Api::namespaced(client, &config.namespace);
