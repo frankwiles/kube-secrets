@@ -1,6 +1,7 @@
 use clap::{App, Arg, ArgMatches};
-use kube::{Client, Api};
+use colorful::Colorful;
 use k8s_openapi::api::core::v1::Secret;
+use kube::{Api, Client};
 
 #[derive(Debug)]
 struct Config {
@@ -18,21 +19,20 @@ fn determine_config(matches: ArgMatches) -> Config {
         query = matches.value_of("query").unwrap().to_string();
     }
 
-    let config = Config{
+    let config = Config {
         show_all: show_all,
         namespace: namespace,
         query: query,
     };
 
-    return config
+    return config;
 }
 
 fn display_secret(c: &Config, s: &Secret) -> bool {
     if c.show_all || s.type_.as_ref().unwrap() == "Opaque" {
-        return true
-    }
-    else {
-        return false
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -57,7 +57,7 @@ async fn main() -> anyhow::Result<()> {
         .arg(
             Arg::new("query")
                 .about("Match secrets names by substring")
-                .takes_value(true)
+                .takes_value(true),
         )
         .get_matches();
 
@@ -70,14 +70,16 @@ async fn main() -> anyhow::Result<()> {
 
     for s in secrets.list(&Default::default()).await? {
         let display = display_secret(&config, &s);
-        if !display { continue; }
-        println!("{}:", s.metadata.name.unwrap());
+        if !display {
+            continue;
+        }
+        println!("{}:", s.metadata.name.unwrap().light_blue());
 
         for (key, value) in s.data {
             let bstring = std::str::from_utf8(&value.0).unwrap();
-            println!("  {}: {}", key, bstring);
+            println!("  {}: {}", key.light_green(), bstring);
         }
-
+        println!();
     }
 
     Ok(())
