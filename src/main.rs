@@ -1,3 +1,8 @@
+extern crate clap;
+extern crate colorful;
+extern crate k8s_openapi;
+extern crate kube;
+
 use clap::{App, Arg, ArgMatches};
 use colorful::Colorful;
 use k8s_openapi::api::core::v1::Secret;
