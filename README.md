@@ -12,7 +12,7 @@ $ cargo install kube-secrets
 
 ## Usage
 
-List all of the useful secrets in namespace `fakespace`
+List all of the useful secrets in namespace `fakespace`. (These are fake secrets in a fake namespace in case you're worried)
 ```shell
 $ secrets fakespace
 ```
