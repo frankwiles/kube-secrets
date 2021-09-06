@@ -12,14 +12,25 @@ $ cargo install kube-secrets
 
 ## Usage
 
-List all of the useful secrets in namespace `foo`
+List all of the useful secrets in namespace `fakespace`
 ```shell
-$ secrets foo
+$ secrets fakespace
 ```
 
-List all of the secrets in namespace `foo` whose name contains the string `bob`
+![Screenshot of full listing](/images/fakespace.png)
+
+List all of the secrets in namespace `fakespace` whose name contains the string `token`
 
 ```shell
-$ secrets foo bob
+$ secrets fakespace token
 ```
 
+![Screenshot of filtered listing](/images/fakespace-token.png)
+
+And if you mistakenly look for secrets in a namespace that doesn't actually exist, it let's you know that.
+
+```shell
+$ secrets bob
+```
+
+![Screenshot of error message](/images/bob.png)
