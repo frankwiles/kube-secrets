@@ -1,13 +1,13 @@
 [package]
 name = "kube-secrets"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2018"
 authors = ["Frank Wiles <frank@revsys.com>"]
 description = "Command line utility to quickly display useful secrets in a Kubernetes namespace"
 license = "BSD-3-Clause"
 homepage = "https://github.com/frankwiles/kube-secrets"
 keywords = ["kubernetes", "k8s", "kube"]
-categories = ["command line utilities"]
+categories = ["command-line-utilities"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
