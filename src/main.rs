@@ -5,7 +5,7 @@ extern crate kube;
 
 use clap::{App, Arg, ArgMatches};
 use colorful::Colorful;
-use k8s_openapi::api::core::v1::Secret;
+use k8s_openapi::api::core::v1::{Namespace, Secret};
 use kube::{Api, Client};
 
 #[derive(Debug)]
@@ -81,6 +81,7 @@ async fn main() -> anyhow::Result<()> {
 
     let client = Client::try_default().await?;
     let secrets: Api<Secret> = Api::namespaced(client, &config.namespace);
+    let mut found_secrets = 0;
 
     for s in secrets.list(&Default::default()).await? {
         let display = display_secret(&config, &s);
@@ -92,8 +93,33 @@ async fn main() -> anyhow::Result<()> {
         for (key, value) in s.data {
             let bstring = std::str::from_utf8(&value.0).unwrap();
             println!("  {}: {}", key.light_green(), bstring);
+            found_secrets += 1;
         }
-        println!();
+        println!()
+    }
+
+    // If we didn't find any secrets in this namespace, check to see if the
+    // namespace actually exists or not to give user a decent message
+    if found_secrets == 0 {
+        let client = Client::try_default().await?;
+        let namespaces: Api<Namespace> = Api::all(client);
+        let mut found = false;
+        for n in namespaces.list(&Default::default()).await? {
+            let name = n.metadata.name.unwrap();
+            if name == config.namespace {
+                found = true;
+                break;
+            }
+        }
+
+        if found == true {
+            println!("No secrets found in namespace '{}'", config.namespace)
+        } else {
+            println!(
+                "Namespace '{}' does not exist. Maybe you're looking at the wrong cluster?",
+                config.namespace
+            );
+        }
     }
 
     Ok(())
