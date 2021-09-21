@@ -94,7 +94,7 @@ async fn main() -> anyhow::Result<()> {
             let bstring = std::str::from_utf8(&value.0);
             match bstring {
                 Ok(bstring) => println!("  {}: {}", key.light_green(), bstring),
-                Err(_) => println!("  {}: <binary>", key.light_green()),
+                Err(_) => println!("  {}: <unable to decode UTF-8>", key.light_green()),
             }
             found_secrets += 1;
         }
