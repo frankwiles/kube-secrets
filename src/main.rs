@@ -91,8 +91,11 @@ async fn main() -> anyhow::Result<()> {
         println!("{}:", s.metadata.name.unwrap().light_blue());
 
         for (key, value) in s.data {
-            let bstring = std::str::from_utf8(&value.0).unwrap();
-            println!("  {}: {}", key.light_green(), bstring);
+            let bstring = std::str::from_utf8(&value.0);
+            match bstring {
+                Ok(bstring) => println!("  {}: {}", key.light_green(), bstring),
+                Err(_) => println!("  {}: <binary>", key.light_green()),
+            }
             found_secrets += 1;
         }
         println!()
