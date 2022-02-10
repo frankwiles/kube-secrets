@@ -16,7 +16,7 @@ name = "secrets"
 path = "src/main.rs"
 
 [dependencies]
-clap = "3.0.0-beta.2"
+clap = { version = "3.0.14", features = ["derive"] }
 tokio = { version = "1.8.0", features = ["full"] }
 anyhow = "1.0.42"
 kube = "0.58.1"
