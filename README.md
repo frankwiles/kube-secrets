@@ -6,6 +6,14 @@ secrets which are TLS certificates, Helm charts, and Docker credentials.
 
 ## Install
 
+For Mac OSX: 
+
+```shell 
+$ brew install frankwiles/tools/kube-secrets
+``` 
+
+or build it from source: 
+
 ```shell
 $ cargo install kube-secrets
 ```
