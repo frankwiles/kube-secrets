@@ -1,15 +1,5 @@
 name: Release
 
-# TESTING MODE: Triggers on push to rework-the-build branch
-# To restore tag-based triggering, comment out the 'push' branch section
-# and uncomment the 'tags' section below:
-# on:
-#   push:
-#     branches:
-#       - rework-the-build
-#   workflow_dispatch:  # Allows manual trigger from Actions tab
-
-# PRODUCTION MODE (uncomment this and comment out above when ready):
 on:
   push:
     tags:
@@ -143,6 +133,14 @@ jobs:
           echo "| Windows x86_64 | [secrets-windows-x86_64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/secrets-windows-x86_64.exe) | [checksum](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/secrets-windows-x86_64.exe.sha256) |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 📋 Installation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### macOS (Homebrew):" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```bash' >> $GITHUB_STEP_SUMMARY
+          echo "brew install frankwiles/tools/kube-secrets" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Manual installation:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo '```bash' >> $GITHUB_STEP_SUMMARY
           echo "# Download the binary for your platform above" >> $GITHUB_STEP_SUMMARY
