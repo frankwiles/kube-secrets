@@ -51,13 +51,15 @@ async fn main() -> anyhow::Result<()> {
         }
         println!("{}:", s.metadata.name.unwrap().light_blue());
 
-        for (key, value) in s.data {
-            let bstring = std::str::from_utf8(&value.0);
-            match bstring {
-                Ok(bstring) => println!("  {}: {}", key.light_green(), bstring),
-                Err(_) => println!("  {}: <unable to decode UTF-8>", key.light_green()),
+        if let Some(data) = &s.data {
+            for (key, value) in data.iter() {
+                let bstring = std::str::from_utf8(&value.0);
+                match bstring {
+                    Ok(bstring) => println!("  {}: {}", key.clone().light_green(), bstring),
+                    Err(_) => println!("  {}: <unable to decode UTF-8>", key.clone().light_green()),
+                }
+                found_secrets += 1;
             }
-            found_secrets += 1;
         }
         println!()
     }
