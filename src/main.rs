@@ -30,9 +30,9 @@ fn display_secret(c: &Config, s: &Secret) -> bool {
         if secret_name.contains(query) {
             return true;
         }
-        return false;
+        false
     } else {
-        return false;
+        false
     }
 }
 
@@ -78,7 +78,7 @@ async fn main() -> anyhow::Result<()> {
             }
         }
 
-        if found == true {
+        if found {
             println!("No secrets found in namespace '{}'", config.namespace)
         } else {
             println!(
