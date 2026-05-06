@@ -7,6 +7,7 @@ use clap::Parser;
 use colorful::Colorful;
 use k8s_openapi::api::core::v1::{Namespace, Secret};
 use kube::{Api, Client};
+use std::io::IsTerminal;
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -40,6 +41,7 @@ fn display_secret(c: &Config, s: &Secret) -> bool {
 async fn main() -> anyhow::Result<()> {
     let config = Config::parse();
 
+    let use_colors = std::io::stdout().is_terminal();
     let client = Client::try_default().await?;
     let secrets: Api<Secret> = Api::namespaced(client, &config.namespace);
     let mut found_secrets = 0;
@@ -49,14 +51,27 @@ async fn main() -> anyhow::Result<()> {
         if !display {
             continue;
         }
-        println!("{}:", s.metadata.name.unwrap().light_blue());
+        let name = s.metadata.name.unwrap();
+        if use_colors {
+            println!("{}:", name.light_blue());
+        } else {
+            println!("{}:", name);
+        }
 
         if let Some(data) = &s.data {
             for (key, value) in data.iter() {
                 let bstring = std::str::from_utf8(&value.0);
-                match bstring {
-                    Ok(bstring) => println!("  {}: {}", key.clone().light_green(), bstring),
-                    Err(_) => println!("  {}: <unable to decode UTF-8>", key.clone().light_green()),
+                let key_str = key.clone();
+                if use_colors {
+                    match bstring {
+                        Ok(bstring) => println!("  {}: {}", key_str.light_green(), bstring),
+                        Err(_) => println!("  {}: <unable to decode UTF-8>", key_str.light_green()),
+                    }
+                } else {
+                    match bstring {
+                        Ok(bstring) => println!("  {}: {}", key_str, bstring),
+                        Err(_) => println!("  {}: <unable to decode UTF-8>", key_str),
+                    }
                 }
                 found_secrets += 1;
             }
