@@ -1,5 +1,9 @@
 # kube-secrets Changelog
 
+## 0.7.1  
+
+- Detect if appropriate to use shell colors 
+
 ## 0.7.0 
 
 - Crate updates 
